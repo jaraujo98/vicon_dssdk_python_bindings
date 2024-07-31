@@ -58,6 +58,16 @@ PYBIND11_MODULE(vicon_dssdk, m)
              { auto translation = client.GetSegmentLocalTranslation(ds::String(subject_name), ds::String(segment_name)).Translation;
                return std::vector<double>(translation, translation + 3); }, R"pbdoc(
             Get the local translation of a segment
+        )pbdoc")
+        .def("get_segment_local_rotation_quaternion", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+             { auto rotation = client.GetSegmentLocalRotationQuaternion(ds::String(subject_name), ds::String(segment_name)).Rotation;
+               return std::vector<double>(rotation, rotation + 4); }, R"pbdoc(
+            Get the local orientation (quaternion) of a segment
+        )pbdoc")
+        .def("get_segment_local_rotation_euler_xyz", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+             { auto rotation = client.GetSegmentLocalRotationEulerXYZ(ds::String(subject_name), ds::String(segment_name)).Rotation;
+               return std::vector<double>(rotation, rotation + 3); }, R"pbdoc(
+            Get the local orientation (Euler XYZ) of a segment
         )pbdoc");
 
     // Data types
