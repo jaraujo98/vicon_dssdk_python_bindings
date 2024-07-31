@@ -34,37 +34,37 @@ PYBIND11_MODULE(vicon_dssdk, m)
 
     py::class_<ds::Client>(m, "DataStreamClient")
         .def(py::init<>())
-        .def("connect", [](ds::Client &client, const std::string &host)
+        .def("Connect", [](ds::Client &client, const std::string &host)
              {
         const ds::String host_str = ds::String(host);
         return client.Connect(host_str); }, R"pbdoc(
             Connect to the Vicon DataStream SDK
         )pbdoc")
-        .def("enable_segment_data", &ds::Client::EnableSegmentData, R"pbdoc(
+        .def("EnableSegmentData", &ds::Client::EnableSegmentData, R"pbdoc(
             Enable segment data in the Vicon DataStream SDK
         )pbdoc")
-        .def("get_frame", &ds::Client::GetFrame, R"pbdoc(
+        .def("GetFrame", &ds::Client::GetFrame, R"pbdoc(
             Get a frame of data from the Vicon DataStream SDK
         )pbdoc")
-        .def("get_subject_count", [](ds::Client &client)
+        .def("GetSubjectCount", [](ds::Client &client)
              { return client.GetSubjectCount().SubjectCount; }, R"pbdoc(
             Get the number of subjects in the current frame
         )pbdoc")
-        .def("get_subject_name", [](ds::Client &client, unsigned int index)
+        .def("GetSubjectName", [](ds::Client &client, unsigned int index)
              { return std::string(client.GetSubjectName(index).SubjectName); }, R"pbdoc(
             Get the name of a subject by index
         )pbdoc")
-        .def("get_segment_local_translation", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+        .def("GetSegmentLocalTranslation", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
              { auto translation = client.GetSegmentLocalTranslation(ds::String(subject_name), ds::String(segment_name)).Translation;
                return std::vector<double>(translation, translation + 3); }, R"pbdoc(
             Get the local translation of a segment
         )pbdoc")
-        .def("get_segment_local_rotation_quaternion", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+        .def("GetSegmentLocalRotationQuaternion", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
              { auto rotation = client.GetSegmentLocalRotationQuaternion(ds::String(subject_name), ds::String(segment_name)).Rotation;
                return std::vector<double>(rotation, rotation + 4); }, R"pbdoc(
             Get the local orientation (quaternion) of a segment
         )pbdoc")
-        .def("get_segment_local_rotation_euler_xyz", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+        .def("GetSegmentLocalRotationEulerXYZ", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
              { auto rotation = client.GetSegmentLocalRotationEulerXYZ(ds::String(subject_name), ds::String(segment_name)).Rotation;
                return std::vector<double>(rotation, rotation + 3); }, R"pbdoc(
             Get the local orientation (Euler XYZ) of a segment
