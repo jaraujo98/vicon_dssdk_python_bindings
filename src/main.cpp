@@ -42,7 +42,8 @@ PYBIND11_MODULE(vicon_dssdk, m)
         .def("get_frame", &ds::Client::GetFrame, R"pbdoc(
             Get a frame of data from the Vicon DataStream SDK
         )pbdoc")
-        .def("get_subject_count", &ds::Client::GetSubjectCount, R"pbdoc(
+        .def("get_subject_count", [](ds::Client &client)
+             { return client.GetSubjectCount().SubjectCount; }, R"pbdoc(
             Get the number of subjects in the current frame
         )pbdoc");
 
@@ -79,11 +80,6 @@ PYBIND11_MODULE(vicon_dssdk, m)
         .value("NotPresent", ds::Result::Enum::NotPresent)
         .value("ArgumentOutOfRange", ds::Result::Enum::ArgumentOutOfRange)
         .export_values();
-
-    py::class_<ds::Output_GetSubjectCount>(m, "Output_GetSubjectCount")
-        .def(py::init<>())
-        .def_readonly("Result", &ds::Output_GetSubjectCount::Result)
-        .def_readonly("SubjectCount", &ds::Output_GetSubjectCount::SubjectCount);
 
     py::class_<ds::Output_SimpleResult>(m, "Output_SimpleResult")
         .def(py::init<>())
