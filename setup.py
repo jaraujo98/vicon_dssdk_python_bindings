@@ -15,20 +15,22 @@ __version__ = "0.0.1"
 
 ext_modules = [
     Pybind11Extension(
-        "python_example",
+        "vicon_dssdk",
         ["src/main.cpp"],
         # Example: passing in the version to the compiled code
         define_macros=[("VERSION_INFO", __version__)],
+        include_dirs=["include"],
+        # library_dirs=["lib"],
+        # runtime_library_dirs=[pathlib.Path().absolute().as_posix()],
+        extra_objects=["lib/libViconDataStreamSDK_CPP.so"],
     ),
 ]
 
 setup(
-    name="python_example",
+    name="vicon_dssdk",
     version=__version__,
-    author="Sylvain Corlay",
-    author_email="sylvain.corlay@gmail.com",
-    url="https://github.com/pybind/python_example",
-    description="A test project using pybind11",
+    author="Joao Pedro Araujo",
+    description="Python bindings for the Vicon DataStream SDK",
     long_description="",
     ext_modules=ext_modules,
     extras_require={"test": "pytest"},

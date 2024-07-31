@@ -1,5 +1,7 @@
-import python_example as m
+import sys
 
-assert m.__version__ == "0.0.1"
-assert m.add(1, 2) == 3
-assert m.subtract(1, 2) == -1
+import vicon_dssdk
+
+client = vicon_dssdk.DataStreamClient()
+result = client.connect(sys.argv[1])
+print(result.Result)
