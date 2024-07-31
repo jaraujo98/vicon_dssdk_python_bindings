@@ -45,6 +45,10 @@ PYBIND11_MODULE(vicon_dssdk, m)
         .def("get_subject_count", [](ds::Client &client)
              { return client.GetSubjectCount().SubjectCount; }, R"pbdoc(
             Get the number of subjects in the current frame
+        )pbdoc")
+        .def("get_subject_name", [](ds::Client &client, unsigned int index)
+             { return std::string(client.GetSubjectName(index).SubjectName); }, R"pbdoc(
+            Get the name of a subject by index
         )pbdoc");
 
     // Data types
