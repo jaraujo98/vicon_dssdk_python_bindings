@@ -1,4 +1,5 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 #include "DataStreamClient.h"
 
@@ -39,6 +40,9 @@ PYBIND11_MODULE(vicon_dssdk, m)
         return client.Connect(host_str); }, R"pbdoc(
             Connect to the Vicon DataStream SDK
         )pbdoc")
+        .def("enable_segment_data", &ds::Client::EnableSegmentData, R"pbdoc(
+            Enable segment data in the Vicon DataStream SDK
+        )pbdoc")
         .def("get_frame", &ds::Client::GetFrame, R"pbdoc(
             Get a frame of data from the Vicon DataStream SDK
         )pbdoc")
@@ -49,6 +53,11 @@ PYBIND11_MODULE(vicon_dssdk, m)
         .def("get_subject_name", [](ds::Client &client, unsigned int index)
              { return std::string(client.GetSubjectName(index).SubjectName); }, R"pbdoc(
             Get the name of a subject by index
+        )pbdoc")
+        .def("get_segment_local_translation", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+             { auto translation = client.GetSegmentLocalTranslation(ds::String(subject_name), ds::String(segment_name)).Translation;
+               return std::vector<double>(translation, translation + 3); }, R"pbdoc(
+            Get the local translation of a segment
         )pbdoc");
 
     // Data types
@@ -90,6 +99,9 @@ PYBIND11_MODULE(vicon_dssdk, m)
         .def_readonly("Result", &ds::Output_SimpleResult::Result);
 
     py::class_<ds::Output_Connect, ds::Output_SimpleResult>(m, "Output_Connect")
+        .def(py::init<>());
+
+    py::class_<ds::Output_EnableSegmentData, ds::Output_SimpleResult>(m, "Output_EnableSegmentData")
         .def(py::init<>());
 
     py::class_<ds::Output_GetFrame, ds::Output_SimpleResult>(m, "Output_GetFrame")
