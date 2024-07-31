@@ -34,12 +34,13 @@ PYBIND11_MODULE(vicon_dssdk, m)
     py::class_<ds::Client>(m, "DataStreamClient")
         .def(py::init<>())
         .def("connect", [](ds::Client &client, const std::string &host)
-             { 
-                const ds::String host_str = ds::String(host);
-                return client.Connect(host_str); }, R"pbdoc(
+             {
+        const ds::String host_str = ds::String(host);
+        return client.Connect(host_str); }, R"pbdoc(
             Connect to the Vicon DataStream SDK
-
-            Some other explanation about the connect function.
+        )pbdoc")
+        .def("get_frame", &ds::Client::GetFrame, R"pbdoc(
+            Get a frame of data from the Vicon DataStream SDK
         )pbdoc");
 
     // Data types
@@ -81,6 +82,9 @@ PYBIND11_MODULE(vicon_dssdk, m)
         .def_readwrite("Result", &ds::Output_SimpleResult::Result);
 
     py::class_<ds::Output_Connect, ds::Output_SimpleResult>(m, "Output_Connect")
+        .def(py::init<>());
+
+    py::class_<ds::Output_GetFrame, ds::Output_SimpleResult>(m, "Output_GetFrame")
         .def(py::init<>());
 
 #ifdef VERSION_INFO
