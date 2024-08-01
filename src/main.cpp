@@ -46,6 +46,10 @@ PYBIND11_MODULE(vicon_dssdk, m)
         .def("GetFrame", &ds::Client::GetFrame, R"pbdoc(
             Get a frame of data from the Vicon DataStream SDK
         )pbdoc")
+        .def("GetFrameNumber", [](ds::Client &client)
+             { return client.GetFrameNumber().FrameNumber; }, R"pbdoc(
+            Get the frame number of the current frame
+        )pbdoc")
         .def("GetSubjectCount", [](ds::Client &client)
              { return client.GetSubjectCount().SubjectCount; }, R"pbdoc(
             Get the number of subjects in the current frame
