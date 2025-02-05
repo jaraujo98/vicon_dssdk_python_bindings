@@ -43,6 +43,9 @@ PYBIND11_MODULE(vicon_dssdk, m)
         .def("EnableSegmentData", &ds::Client::EnableSegmentData, R"pbdoc(
             Enable segment data in the Vicon DataStream SDK
         )pbdoc")
+        .def("EnableMarkerData", &ds::Client::EnableMarkerData, R"pbdoc(
+            Enable marker data in the Vicon DataStream SDK
+        )pbdoc")
         .def("GetFrame", &ds::Client::GetFrame, R"pbdoc(
             Get a frame of data from the Vicon DataStream SDK
         )pbdoc")
@@ -58,6 +61,33 @@ PYBIND11_MODULE(vicon_dssdk, m)
              { return std::string(client.GetSubjectName(index).SubjectName); }, R"pbdoc(
             Get the name of a subject by index
         )pbdoc")
+        .def("GetSegmentCount", [](ds::Client &client, const std::string &subject_name)
+             { return client.GetSegmentCount(ds::String(subject_name)).SegmentCount; }, R"pbdoc(
+            Get the number of segments in a subject
+        )pbdoc")
+        .def("GetSegmentName", [](ds::Client &client, const std::string &subject_name, unsigned int index)
+             { return std::string(client.GetSegmentName(ds::String(subject_name), index).SegmentName); }, R"pbdoc(
+            Get the name of a segment by index
+        )pbdoc")
+        .def("GetSegmentParentName", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+             { return std::string(client.GetSegmentParentName(ds::String(subject_name), ds::String(segment_name)).SegmentName); }, R"pbdoc(
+            Get the parent segment of a segment
+        )pbdoc")
+        .def("GetSegmentStaticRotationQuaternion", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+             { auto rotation = client.GetSegmentStaticRotationQuaternion(ds::String(subject_name), ds::String(segment_name)).Rotation;
+               return std::vector<double>(rotation, rotation + 4); }, R"pbdoc(
+            Get the static orientation (quaternion) of a segment
+        )pbdoc")
+        .def("GetSegmentGlobalTranslation", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+             { auto translation = client.GetSegmentGlobalTranslation(ds::String(subject_name), ds::String(segment_name)).Translation;
+               return std::vector<double>(translation, translation + 3); }, R"pbdoc(
+            Get the global translation of a segment
+        )pbdoc")
+        .def("GetSegmentGlobalRotationQuaternion", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
+             { auto rotation = client.GetSegmentGlobalRotationQuaternion(ds::String(subject_name), ds::String(segment_name)).Rotation;
+               return std::vector<double>(rotation, rotation + 4); }, R"pbdoc(
+            Get the global orientation (quaternion) of a segment
+        )pbdoc")
         .def("GetSegmentLocalTranslation", [](ds::Client &client, const std::string &subject_name, const std::string &segment_name)
              { auto translation = client.GetSegmentLocalTranslation(ds::String(subject_name), ds::String(segment_name)).Translation;
                return std::vector<double>(translation, translation + 3); }, R"pbdoc(
@@ -72,6 +102,11 @@ PYBIND11_MODULE(vicon_dssdk, m)
              { auto rotation = client.GetSegmentLocalRotationEulerXYZ(ds::String(subject_name), ds::String(segment_name)).Rotation;
                return std::vector<double>(rotation, rotation + 3); }, R"pbdoc(
             Get the local orientation (Euler XYZ) of a segment
+        )pbdoc")
+        .def("GetMarkerGlobalTranslation", [](ds::Client &client, const std::string &subject_name, const std::string &marker_name)
+             { auto translation = client.GetMarkerGlobalTranslation(ds::String(subject_name), ds::String(marker_name)).Translation;
+               return std::vector<double>(translation, translation + 3); }, R"pbdoc(
+            Get the global translation of a marker
         )pbdoc");
 
     // Data types
@@ -116,6 +151,9 @@ PYBIND11_MODULE(vicon_dssdk, m)
         .def(py::init<>());
 
     py::class_<ds::Output_EnableSegmentData, ds::Output_SimpleResult>(m, "Output_EnableSegmentData")
+        .def(py::init<>());
+
+    py::class_<ds::Output_EnableMarkerData, ds::Output_SimpleResult>(m, "Output_EnableMarkerData")
         .def(py::init<>());
 
     py::class_<ds::Output_GetFrame, ds::Output_SimpleResult>(m, "Output_GetFrame")
